@@ -5,6 +5,8 @@
 
 #include "Version.h"
 
+using namespace nerp;
+
 Version::Version(unsigned int major, unsigned int minor) : Major(major), Minor(minor) {}
 
 bool Version::operator==(const Version &rhs) const {

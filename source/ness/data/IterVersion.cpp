@@ -5,6 +5,8 @@
 
 #include "IterVersion.h"
 
+using namespace nerp;
+
 IterVersion::IterVersion(unsigned long long int value) : Value(value) {}
 
 bool IterVersion::operator==(const IterVersion &rhs) const {

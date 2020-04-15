@@ -10,21 +10,18 @@ SET(VERSION_PATCH 0)
 SET(PROJECT_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 include_directories(source)
-include_directories(source/data)
-include_directories(source/extensions)
-include_directories(source/interface)
 
 add_definitions(-DNESSLIB_EXPORTS)
 
 set(SRC_FILES
-        source/data/IterVersion.cpp
-        source/data/IterVersion.h
-        source/data/Version.cpp
-        source/data/Version.h
-        source/interface/ILinkedObserver.cpp
-        source/interface/ILinkedObserver.h
-        source/interface/IObservable.cpp
-        source/interface/IObservable.h)
+        source/ness/data/IterVersion.cpp
+        source/ness/data/IterVersion.h
+        source/ness/data/Version.cpp
+        source/ness/data/Version.h
+        source/ness/interface/ILinkedObserver.cpp
+        source/ness/interface/ILinkedObserver.h
+        source/ness/interface/IObservable.cpp
+        source/ness/interface/IObservable.h)
 
 
 add_library(Nerp-Essentials STATIC ${SRC_FILES})
