@@ -19,7 +19,7 @@ set(SRC_FILES
         source/ness/data/Version.cpp
         source/ness/data/Version.h
         source/ness/interface/ILinkedObserver.h
-        source/ness/interface/IObservable.h source/ness/data/Property.h)
+        source/ness/interface/IObservable.h source/ness/data/Property.h source/ness/interface/IHasMember.h source/ness/defines/IHasMember_Def.h)
 
 
 add_library(Nerp-Essentials STATIC ${SRC_FILES})
