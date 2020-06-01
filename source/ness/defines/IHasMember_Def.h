@@ -6,12 +6,14 @@
 #define NERP_BUILDER_WX_IHASMEMBER_DEF_H
 
 #include <ness/data/Property.h>
+#include <memory>
+#include <boost/pointer_cast.hpp>
 
 namespace nerp {
-    #define __NERP_DEF_PREFIX_I_HAS_MEMBER IHasMember_
+   // #define __NERP_DEF_PREFIX_I_HAS_MEMBER IHasMember_
 
     #define __NERP_DEF_GENERATE_I_HAS_MEMBER(memberType, memberName) \
-    class __NERP_DEF_PREFIX_I_HAS_MEMBER ##memberName { \
+    class IHasMember_##memberName { \
     public: \
         virtual memberType get_##memberName() = 0; \
         virtual void set_##memberName(const memberType& parValue) = 0; \
@@ -21,18 +23,18 @@ namespace nerp {
     virtual memberType get_##memberName() override { return memberVarName;} \
     virtual void set_##memberName(const memberType& parValue) override { memberVarName = parValue;}
 
-    #define __NERP_DEF_INHERIT_I_HAS_MEMBER(memberName)  public __NERP_DEF_PREFIX_I_HAS_MEMBER ##memberName
+    #define __NERP_DEF_INHERIT_I_HAS_MEMBER(memberName)  public  IHasMember_##memberName
 
-    #define __NERP_DEF_STATIC_CAST_I_HAS_MEMBER(memberName, castTarget) std::static_cast<__NERP_DEF_PREFIX_I_HAS_MEMBER ##memberName>(castTarget)
-
-
+    #define __NERP_DEF_REINTERPRET_CAST_SHARED_PTR_I_HAS_MEMBER(memberName, castTarget)  boost::reinterpret_pointer_cast<IHasMember_##memberName>(castTarget)
 
 
 
-    #define __NERP_DEF_PREFIX_I_HAS_PROPERTY_MEMBER IHasPropertyMember_
+
+
+   // #define __NERP_DEF_PREFIX_I_HAS_PROPERTY_MEMBER IHasPropertyMember_
 
     #define __NERP_DEF_GENERATE_I_HAS_PROPERTY_MEMBER(memberInsideType, memberName) \
-    class __NERP_DEF_PREFIX_I_HAS_PROPERTY_MEMBER ##memberName { \
+    class IHasPropertyMember_##memberName { \
     public: \
         virtual memberInsideType get_##memberName() = 0; \
         virtual void set_##memberName(const memberInsideType& parValue) = 0; \
@@ -42,9 +44,9 @@ namespace nerp {
     virtual memberInsideType get_##memberName() override {return memberVarName.get();} \
     virtual void set_##memberName(const memberInsideType& parValue) override {memberVarName.set(parValue);}
 
-    #define __NERP_DEF_INHERIT_I_HAS_PROPERTY_MEMBER(memberName) public __NERP_DEF_PREFIX_I_HAS_PROPERTY_MEMBER ##memberName
+    #define __NERP_DEF_INHERIT_I_HAS_PROPERTY_MEMBER(memberName) public IHasPropertyMember_##memberName
 
-    #define __NERP_DEF_STATIC_CAST_I_HAS_PROPERTY_MEMBER(memberName, castTarget) std::static_cast<__NERP_DEF_PREFIX_I_HAS_PROPERTY_MEMBER ##memberName>(castTarget)
+    #define __NERP_DEF_REINTERPRET_CAST_SHARED_PTR_I_HAS_PROPERTY_MEMBER(memberName, castTarget) boost::reinterpret_pointer_cast<IHasPropertyMember_##memberName>(castTarget)
 
 }
 
