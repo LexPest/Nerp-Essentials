@@ -38,11 +38,13 @@ namespace nerp {
     public: \
         virtual memberInsideType get_##memberName() = 0; \
         virtual void set_##memberName(const memberInsideType& parValue) = 0; \
+        virtual void add_function_to_invoke_on_prop_change_no_arg_##memberName(std::function<void(void)> parFunc) = 0; \
     };
 
     #define __NERP_DEF_GENERATE_IMPLEMENT_I_HAS_PROPERTY_MEMBER(memberInsideType, memberName, memberVarName) \
     virtual memberInsideType get_##memberName() override {return memberVarName.get();} \
-    virtual void set_##memberName(const memberInsideType& parValue) override {memberVarName.set(parValue);}
+    virtual void set_##memberName(const memberInsideType& parValue) override {memberVarName.set(parValue);} \
+    virtual void add_function_to_invoke_on_prop_change_no_arg_##memberName(std::function<void(void)> parFunc) override {memberVarName.addOnChangePropertyInvokeFunction_NoArg(parFunc);}
 
     #define __NERP_DEF_INHERIT_I_HAS_PROPERTY_MEMBER(memberName) public IHasPropertyMember_##memberName
 

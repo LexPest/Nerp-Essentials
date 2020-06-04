@@ -8,44 +8,76 @@
 #include <list>
 #include <functional>
 #include <map>
+#include <boost/any.hpp>
 
 namespace nerp {
-    struct InvokeFunctionHandlerMeta{};
+    struct InvokeFunctionHandlerMeta_NoArg{};
+    struct InvokeFunctionHandlerMeta_ArgT{};
+    struct InvokeFunctionHandlerMeta_ArgAny{};
+
 
     template<typename T>
     class Property {
     public:
-        explicit Property() : PropValue() {};
+        explicit Property() : PropValue() { PropValue = std::make_shared<T>(); };
         explicit Property(T propValue) : PropValue(propValue) {}
         explicit Property(T& propValue) : PropValue(propValue) {}
         explicit Property(Property<T>& propValue) = delete;
         Property<T> operator=(Property<T>& propValue) = delete;
 
-        std::shared_ptr<InvokeFunctionHandlerMeta> addOnChangePropertyInvokeFunction(std::function<void(T)> f){
-            std::shared_ptr<InvokeFunctionHandlerMeta> handler = std::make_shared<InvokeFunctionHandlerMeta>();
-            OnChangePropertyInvokeFuncs.insert(std::make_pair(handler, f));
+        std::shared_ptr<InvokeFunctionHandlerMeta_NoArg> addOnChangePropertyInvokeFunction_NoArg(std::function<void(void)> f){
+            std::shared_ptr<InvokeFunctionHandlerMeta_NoArg> handler = std::make_shared<InvokeFunctionHandlerMeta_NoArg>();
+            OnChangePropertyInvokeFuncs_NoArg.insert(std::make_pair(handler, f));
             return handler;
         }
 
-        void removeOnChangePropertyInvokeFunction(std::shared_ptr<InvokeFunctionHandlerMeta> parHandler){
-            OnChangePropertyInvokeFuncs.erase(parHandler);
+        std::shared_ptr<InvokeFunctionHandlerMeta_ArgT> addOnChangePropertyInvokeFunction_ArgT(std::function<void(const T&)> f){
+            std::shared_ptr<InvokeFunctionHandlerMeta_ArgT> handler = std::make_shared<InvokeFunctionHandlerMeta_ArgT>();
+            OnChangePropertyInvokeFuncs_ArgT.insert(std::make_pair(handler, f));
+            return handler;
         }
 
-        inline T get(){
-            return std::move(PropValue);
+        std::shared_ptr<InvokeFunctionHandlerMeta_ArgAny> addOnChangePropertyInvokeFunction_ArgAny(std::function<void(const boost::any&)> f){
+            std::shared_ptr<InvokeFunctionHandlerMeta_ArgAny> handler = std::make_shared<InvokeFunctionHandlerMeta_ArgAny>();
+            OnChangePropertyInvokeFuncs_ArgAny.insert(std::make_pair(handler, f));
+            return handler;
+        }
+
+        void removeOnChangePropertyInvokeFunction_NoArg(std::shared_ptr<InvokeFunctionHandlerMeta_NoArg> parHandler){
+            OnChangePropertyInvokeFuncs_NoArg.erase(parHandler);
+        }
+
+        void removeOnChangePropertyInvokeFunction_ArgT(std::shared_ptr<InvokeFunctionHandlerMeta_ArgT> parHandler){
+            OnChangePropertyInvokeFuncs_ArgT.erase(parHandler);
+        }
+
+        void removeOnChangePropertyInvokeFunction_ArgAny(std::shared_ptr<InvokeFunctionHandlerMeta_ArgAny> parHandler){
+            OnChangePropertyInvokeFuncs_ArgAny.erase(parHandler);
+        }
+
+        inline T& get(){
+            return *PropValue;
         }
 
         inline void set(const T& parNewValue){
-            PropValue = parNewValue;
-            for (auto const& invokeFunc : OnChangePropertyInvokeFuncs){
-                invokeFunc.second(PropValue);
+            *PropValue = parNewValue;
+            for (auto const& invokeFunc : OnChangePropertyInvokeFuncs_NoArg){
+                invokeFunc.second();
+            }
+            for (auto const& invokeFunc : OnChangePropertyInvokeFuncs_ArgT){
+                invokeFunc.second(*PropValue);
+            }
+            for (auto const& invokeFunc : OnChangePropertyInvokeFuncs_ArgAny){
+                invokeFunc.second(*PropValue);
             }
         }
 
     private:
-        std::map<std::shared_ptr<InvokeFunctionHandlerMeta>, std::function<void(T)>> OnChangePropertyInvokeFuncs;
+        std::map<std::shared_ptr<InvokeFunctionHandlerMeta_NoArg>, std::function<void(void)>> OnChangePropertyInvokeFuncs_NoArg;
+        std::map<std::shared_ptr<InvokeFunctionHandlerMeta_ArgT>, std::function<void(const T&)>> OnChangePropertyInvokeFuncs_ArgT;
+        std::map<std::shared_ptr<InvokeFunctionHandlerMeta_ArgAny>, std::function<void(const boost::any&)>> OnChangePropertyInvokeFuncs_ArgAny;
 
-        T PropValue;
+        std::shared_ptr<T> PropValue;
     };
 }
 
