@@ -9,6 +9,7 @@
 #include <functional>
 #include <map>
 #include <boost/any.hpp>
+#include <memory>
 
 namespace nerp {
     struct InvokeFunctionHandlerMeta_NoArg{};
